@@ -1,0 +1,24 @@
+* {
+    font-family: 'Satoshi', sans-serif !important;
+    word-wrap: break-word !important; 
+}
+
+
+body {
+    text-align: center !important;
+    background-color: #f0f0f0c7 !important;
+}
+
+.container {
+    max-width: 900px !important;
+    min-height: 350px !important;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.my-button {
+    width: fit-content !important;
+}
