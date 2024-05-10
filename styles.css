@@ -22,3 +22,47 @@ body {
 .my-button {
     width: fit-content !important;
 }
+
+
+/* Login */
+.login__box {
+    margin-bottom: 1.5rem;
+    position: relative;
+    border: none;
+}
+
+.login__input {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    transition: padding 0.3s, font-size 0.3s;
+}
+
+.login__label {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #999;
+    font-size: 1rem;
+    transition: top 0.3s, font-size 0.3s;
+    pointer-events: none;
+}
+
+.container_login {
+    max-width: 700px !important;
+    min-height: 350px !important;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login__input:focus + .login__label,
+.login__input:valid + .login__label {
+    top: -22px;
+    font-size: 0.8rem;
+    left: 10px;
+}
