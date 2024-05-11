@@ -184,6 +184,12 @@ document.addEventListener("DOMContentLoaded", function() {
             updateScore();
             console.log(score);
         });
+
+        document.getElementById("logout_btn").addEventListener("click", function() {
+            sendScoreToServer();
+            window.location.href = "login.html";
+            console.log("Logout");
+        });
     }
 
     if (userDisplay && username !== ""){
