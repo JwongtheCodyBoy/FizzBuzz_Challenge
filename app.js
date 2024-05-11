@@ -16,25 +16,18 @@ document.addEventListener("DOMContentLoaded", function() {
         score++;
         let fizzBuzzText = fizzBuzz(score);
         document.getElementById("score").textContent = fizzBuzzText;
-        // sendScoreToServer();
+        sendScoreToServer();
     }
 
     // Function to send score to server
     function sendScoreToServer() {
-        const username = document.getElementById("username").value;
-        fetch("http://basic-web.dev.avc.web.usf.edu/", {
-            method: "POST",
-            headers: {
-            "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-            username: username,
-            score: score
-            })
+        PostData(username, score)
+        .then(response => {
+            console.log("User updated/created successfully:", response);
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error("Error:", error));
+        .catch(error => {
+            console.error("Error updating/creating user:", error);
+        });
     }
 
     // Loading Login info 
@@ -45,21 +38,49 @@ document.addEventListener("DOMContentLoaded", function() {
             let name = userData.user;
             let num = userData.userNumber;
 
+            username = name;
+            score = num;
+
             document.getElementById("userDisplay").innerText = name;
             document.getElementById("score").innerText = num
             console.log("Username: " + name + "   Score: " + num);
-        } 
+        }
+        else {
+            alert("Please give a Username");
+            window.location.href = "login.html";
+        }
+
         // clearing stored data after loading
         localStorage.removeItem("userData");
     }
 
 
 
-    // Login page
+    // Login page functions
     function getUsername() {
         username = document.getElementById("username").value;
         console.log("Username:", username);
-        Redirect();
+
+        //add API call stuff here (finding username, then replace score with saved score) (getscore call)
+        GetData(username)
+            .then(score => {
+                if (score === 0) {  // If score is 0, possible that new user is being created so instaintly PostData to create new user
+                    PostData(username, 0)
+                        .then(response => {
+                            console.log("User data posted successfully:", response);
+                        })
+                        .catch(error => {
+                            console.error("Error posting user data:", error);
+                        });
+                } else {
+                    console.log("Username:", username, "\tUser's score:", score);
+                }
+                Redirect();
+            })
+        .catch(error => {
+            console.error("Error getting user score:", error);
+            Redirect();
+        });
     }
 
     function Redirect(){
@@ -70,6 +91,65 @@ document.addEventListener("DOMContentLoaded", function() {
 
         localStorage.setItem("userData", JSON.stringify(data));
         window.location.href = "index.html";
+    }
+
+
+    //API stuff
+    function GetData(username){
+        const baseURL = " http://basic-web.dev.avc.web.usf.edu";
+        const url = `${baseURL}/${username}`;
+        
+        return new Promise((resolve, reject) => {
+            const http = new XMLHttpRequest();
+            http.onload = function() {
+                if (http.status >= 200 && http.status < 300) {
+                    resolve(JSON.parse(http.responseText).score);
+                } else if (http.status === 404) {
+                    resolve(0);     //in loading next page, if score === 0, then imedieatly post to api    
+                } else {
+                    reject(new Error("HTTP request failed with status: " + http.status));
+                }
+            };
+            
+            http.onerror = function() {
+                reject(new Error("Network Error"));
+            };
+            
+            http.open("GET", url);
+            http.send();
+        });
+    }
+
+    function PostData(username, score){
+        const baseURL = " http://basic-web.dev.avc.web.usf.edu";
+        const url = `${baseURL}/${username}`;
+        const data = { score: score };
+
+        const jsonData = JSON.stringify(data);
+        return new Promise((resolve, reject) => {
+            const http = new XMLHttpRequest();
+
+            http.onload = function() {
+                if (http.status >= 200 && http.status < 300) 
+                    resolve({ status: http.status, data: JSON.parse(http.response) });
+                else if (http.status >= 400 && http.status < 500) 
+                    reject(new Error(`Invalid request: ${http.responseText}`));
+                else if (http.status >= 500) 
+                    reject(new Error(`Internal server error: ${http.responseText}`));
+                else 
+                    reject(new Error(`Error: ${http.statusText}`));
+                
+            };
+
+            http.onerror = function() {
+                reject(new Error("Network Error"));
+            };
+
+            http.open("POST", url);
+            
+            http.setRequestHeader("Content-Type", "application/json");
+            http.send(jsonData);
+        });
     }
 
 
@@ -103,10 +183,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (incrementBtn){
         LoadPage();
         document.getElementById("increment_btn").addEventListener("click", function() {
-            //   if (!document.getElementById("username").value) {
-            //     alert("Please enter your username");
-            //     return;
-            //   }
             updateScore();
             console.log(score);
         });
