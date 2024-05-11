@@ -35,15 +35,12 @@ document.addEventListener("DOMContentLoaded", function() {
         let storedData = localStorage.getItem("userData");
         if (storedData) {
             let userData = JSON.parse(storedData);
-            let name = userData.user;
-            let num = userData.userNumber;
+            username = userData.user;
+            score = userData.userNumber;
 
-            username = name;
-            score = num;
-
-            document.getElementById("userDisplay").innerText = name;
-            document.getElementById("score").innerText = num
-            console.log("Username: " + name + "   Score: " + num);
+            console.log("Username: " + username + "   Score: " + score);
+            document.getElementById("userDisplay").textContent  = username;
+            document.getElementById("score").textContent  = fizzBuzz(score);
         }
         else {
             alert("Please give a Username");
@@ -63,8 +60,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         //add API call stuff here (finding username, then replace score with saved score) (getscore call)
         GetData(username)
-            .then(score => {
-                if (score === 0) {  // If score is 0, possible that new user is being created so instaintly PostData to create new user
+            .then(num => {
+                if (num === 0) {  // If score is 0, possible that new user is being created so instaintly PostData to create new user
                     PostData(username, 0)
                         .then(response => {
                             console.log("User data posted successfully:", response);
@@ -73,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             console.error("Error posting user data:", error);
                         });
                 } else {
+                    score = num;
                     console.log("Username:", username, "\tUser's score:", score);
                 }
                 Redirect();
@@ -96,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //API stuff
     function GetData(username){
-        const baseURL = " http://basic-web.dev.avc.web.usf.edu";
+        const baseURL = "http://basic-web.dev.avc.web.usf.edu";
         const url = `${baseURL}/${username}`;
         
         return new Promise((resolve, reject) => {

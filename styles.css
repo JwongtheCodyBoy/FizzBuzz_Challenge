@@ -3,7 +3,7 @@
     word-wrap: break-word !important; 
 }
 
-
+/* Main page */
 body {
     text-align: center !important;
     background-color: #f0f0f0c7 !important;
@@ -60,6 +60,7 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
+/* Username Animation */
 .login__input:focus + .login__label,
 .login__input:valid + .login__label {
     top: -22px;
