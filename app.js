@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //API stuff
     function GetData(username){
-        const baseURL = "http://basic-web.dev.avc.web.usf.edu";
+        const baseURL = "";    //Use your own back end call URL
         const url = `${baseURL}/${username}`;
         
         return new Promise((resolve, reject) => {
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function PostData(username, score){
-        const baseURL = " http://basic-web.dev.avc.web.usf.edu";
+        const baseURL = ""; //Use your own back end call URL
         const url = `${baseURL}/${username}`;
         const data = { score: score };
 
